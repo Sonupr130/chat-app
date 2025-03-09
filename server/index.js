@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+import authRoutes from './routes/AuthRoutes.js';
+
 
 
 dotenv.config();
@@ -19,8 +21,10 @@ app.use(cors({
 }))
 
 
-appuse(express.json());
+app.use(express.json());
 app.use(cookieParser());
+
+app.use("/api/auth", authRoutes);
 
 
 const server = app.listen(PORT, () => {
