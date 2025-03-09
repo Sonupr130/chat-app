@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
+import { compare } from "bcrypt";
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 const createToken = ({email, userId}) => {
@@ -62,6 +63,28 @@ export const login = async (req, res) => {
             image: user.image,
             color: user.color,
         } });
+    } catch (error) {
+        console.error(error);
+        res.status(400).send("Internal Server Error");
+    }
+};
+
+
+export const getUserInfo = async (req, res) => {
+    try {
+        const userData = await User.findById(req.userId);
+        if(!userData) {
+            return res.status(400).send("User not found");
+        }
+        return res.status(201).json({ 
+            id: userData.id,
+            email: userData.email,
+            profileSetup: userData.profileSetup,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            image: userData.image,
+            color: userData.color,
+        });
     } catch (error) {
         console.error(error);
         res.status(400).send("Internal Server Error");
