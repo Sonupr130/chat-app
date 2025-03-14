@@ -171,7 +171,6 @@ export const updateProfile = async (req, res) => {
 //   }
 // };
 
-
 export const addProfileImage = async (req, res) => {
   try {
     if (!req.file) {
@@ -196,7 +195,6 @@ export const addProfileImage = async (req, res) => {
   }
 };
 
-
 // export const removeProfileImage = async (req, res) => {
 //   try {
 //     const { userId } = req;
@@ -219,9 +217,6 @@ export const addProfileImage = async (req, res) => {
 //   }
 // };
 
-
-
-
 export const removeProfileImage = async (req, res) => {
   try {
     const user = await User.findById(req.userId);
@@ -241,6 +236,16 @@ export const removeProfileImage = async (req, res) => {
 
     // 👇 Updated user ko return kar rahe
     return res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+export const Logout = async (req, res) => {
+  try {
+    res.cookie("jwt","", { maxAge: 1, secure: true, sameSite: "None" });
+    return res.status(200).send("Logged out successfully.");
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
