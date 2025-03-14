@@ -1,22 +1,24 @@
-import React, { Children, useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Auth from "./pages/auth";
 import Chat from "./pages/chat";
 import Profile from "./pages/profile";
 import { useAppStore } from "./store";
 import { apiClient } from "./lib/api-client";
-import { GET_USER_INFO } from "./utils/constants";
+import { GET_USER_INFO } from "./utils/constants.js";
 
-const PrivateRoute = ({ Children }) => {
+const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
   const isAuthenticated = !!userInfo;
-  return isAuthenticated ? Children : <Navigate to="/auth" />;
+  return isAuthenticated ? children : <Navigate to="/auth" />;
 };
 
-const AuthRoute = ({ Children }) => {
+
+
+const AuthRoute = ({ children }) => {
   const { userInfo } = useAppStore();
   const isAuthenticated = !!userInfo;
-  return isAuthenticated ? <Navigate to="/chat" /> : Children;
+  return isAuthenticated ? <Navigate to="/chat" /> : children;
 };
 
 const App = () => {
@@ -24,17 +26,20 @@ const App = () => {
   const { userInfo, setUserInfo } = useAppStore();
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     const getUserData = async () => {
       try {
         const response = await apiClient.get(GET_USER_INFO, { withCredentials: true });
+        console.log(response);
         if(response.status === 200 && response.data.id) {
           setUserInfo(response.data);
         } else {
           setUserInfo(undefined);
         }
-        console.log({response});
+        console.log(response);
       } catch (error) {
+        console.log(error);
         setUserInfo(undefined);
       } finally {
         setLoading(false);
@@ -46,6 +51,11 @@ const App = () => {
       setLoading(false);
     }
   }, [userInfo, setUserInfo]);
+
+  if(loading) {
+    return <div>Loading...</div>;
+  }
+  
   return (
     <BrowserRouter>
       <Routes>
@@ -57,7 +67,6 @@ const App = () => {
             </AuthRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/auth" />} />
         <Route
           path="/chat"
           element={

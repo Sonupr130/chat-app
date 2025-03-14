@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import Background from "../../assets/login2.png";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
-import { LOGIN_ROUTE, SIGNUP_ROUTE, } from "@/utils/constants";
+import { LOGIN_ROUTE, SIGNUP_ROUTE, } from "@/utils/constants.js";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "@/store";
 

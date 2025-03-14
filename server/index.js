@@ -15,12 +15,15 @@ const PORT = process.env.PORT || 3001;
 const databaseURL = process.env.DATABASE_URL;
 
 app.use(cors({
-    origin: [process.env.ORIGIN],
+    // origin: process.env.ORIGIN,
+    origin: 'http://localhost:5173',
     methods: ['POST', 'PUT', 'GET', 'DELETE', 'PATCH'],
     credentials: true,
 }))
 
+app.use("/uploads/profiles", express.static("uploads/profiles"));
 
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookieParser());
 
